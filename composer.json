@@ -1,0 +1,25 @@
+{
+    "name": "hzhihua/yii2-bootstrap-fileinput",
+    "description": "file upload,delete,download action",
+    "keywords": ["yii2", "action", "upload", "delete", "download", "file"],
+    "homepage": "https://github.com/Hzhihua/yii2-bootstrap-fileinput",
+    "type": "action",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Hzhihua",
+            "email": "cnzhihua@gmail.com",
+            "homepage": "https://github.com/Hzhihua/yii2-bootstrap-fileinput"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "kartik-v/bootstrap-fileinput": "4.4.8",
+        "kartik-v/yii2-widget-fileinput": "1.0.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "hzhihua\\actions\\": ""
+        }
+    }
+}
