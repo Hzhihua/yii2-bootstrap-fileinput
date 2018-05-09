@@ -69,7 +69,7 @@ class FileUploadAction extends Action
      * allow file type
      * @var array
      */
-    public $fileType = ['jpeg', 'jpe', 'gif', 'png', 'mp4', 'mp3', 'doc', 'docx', 'zip'];
+    public $fileType = ['jpeg', 'jpg', 'gif', 'png', 'mp4', 'mp3', 'doc', 'docx', 'zip'];
 
     /**
      * deny file type
@@ -176,6 +176,18 @@ class FileUploadAction extends Action
     public $downloadAction = 'file-download';
 
     /**
+     * 一维数组
+     * @var array
+     */
+    public $initialPreview = [];
+
+    /**
+     * 二维数组
+     * @var array
+     */
+    public $initialPreviewConfig = [];
+
+    /**
      * new file name
      * you can customize it by EVENT_BEFORE_UPLOAD
      *
@@ -258,8 +270,7 @@ class FileUploadAction extends Action
     {
         parent::init();
 
-        $this->seeDirectory || $this->seeDirectory =
-            sprintf('%s/img/temp/', dirname($_SERVER['PHP_SELF']));
+        $this->seeDirectory || $this->seeDirectory = Yii::$app->params['baseUrl'];
 
     }
 
@@ -315,7 +326,8 @@ class FileUploadAction extends Action
 
         } catch (Exception $e) {
             Yii::warning($e->getMessage(), __METHOD__);
-            return ['error' => Yii::t('upload', 'Upload file failed, please try again.')];
+            return ['error' => $e->getMessage()];
+//            return ['error' => Yii::t('upload', 'Upload file failed, please try again.')];
         }
     }
 
@@ -346,9 +358,9 @@ class FileUploadAction extends Action
             $time = time();
             $this->newDirectory = sprintf(
                 '%s/%s/%s',
-                date('d', $time),
+                date('y', $time),
                 date('m', $time),
-                date('Y', $time)
+                date('d', $time)
             );
         } else {
             $this->newDirectory = trim($this->newDirectory, '/');
@@ -363,9 +375,13 @@ class FileUploadAction extends Action
      */
     public function getInitialPreview(UploadedFile $file)
     {
-        return [
-            $this->getSeeUrl($file),
-        ];
+        if (empty($this->initialPreview)) {
+            $this->initialPreview = [
+                $this->getSeeUrl($file),
+            ];
+        }
+
+        return $this->initialPreview;
     }
 
     /**
@@ -374,12 +390,16 @@ class FileUploadAction extends Action
      */
     public function getInitialPreviewConfig(UploadedFile $file)
     {
-        return [[
-            'caption' => $file->name,
-            'size' => $file->size,
-            'downloadUrl' => $this->getDownloadUrl(), // download url
-            'url' => $this->getDeleteUrl(), // delete url
-        ]];
+        if (empty($this->initialPreviewConfig)) {
+            $this->initialPreviewConfig = [[
+                'caption' => $file->name,
+                'size' => $file->size,
+                'downloadUrl' => $this->getDownloadUrl(), // download url
+                'url' => $this->getDeleteUrl(), // delete url
+            ]];
+        }
+
+        return $this->initialPreviewConfig;
     }
 
     /**

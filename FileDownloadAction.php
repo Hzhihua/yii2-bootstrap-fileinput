@@ -143,7 +143,7 @@ class FileDownloadAction extends Action
             $file = $this->getFilePath();
             $filename = $this->getFileName();;
 
-            if (!(is_file($file) && preg_match('/^[a-z0-9_]+\.[a-z]+$/i', $filename))) {
+            if (!(is_file($file) && preg_match('/^[a-z0-9_]+\.[a-z0-9]+$/i', $filename))) {
                 throw new NotFoundHttpException(Yii::t('upload', "The file \"{filename}\" does not exists.", ['filename' => $event->file->name]));
             }
 

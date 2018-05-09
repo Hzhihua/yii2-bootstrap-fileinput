@@ -143,7 +143,7 @@ class FileDeleteAction extends Action
 
             if (!(
                 is_file($file) &&
-                preg_match('/^[a-z0-9_]+\.[a-z]+$/i', $filename) &&
+                preg_match('/^[a-z0-9_]+\.[a-z0-9]+$/i', $filename) &&
                 FileHelper::unlink($file)
             )) {
                 throw new NotFoundHttpException(Yii::t('upload', "Delete file \"{filename}\" failed, file not found.", ['filename' => $event->file->name]));

@@ -14,7 +14,7 @@ trait DirectoryTrait
     /**
      * @var string
      */
-    public $uploadDirectory = '@webroot/img/temp';
+    public $uploadDirectory = '@source/';
 
     /**
      * handle upload directory
