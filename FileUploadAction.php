@@ -66,32 +66,6 @@ class FileUploadAction extends Action
     public $attribute = 'picture';
 
     /**
-     * allow file type
-     * @var array
-     */
-    public $fileType = ['jpeg', 'jpg', 'gif', 'png', 'mp4', 'mp3', 'doc', 'docx', 'zip'];
-
-    /**
-     * deny file type
-     * @var array
-     */
-    public $denyFileType = [];
-
-    /**
-     * allow max file size
-     * Default: no limit
-     * @var int
-     */
-    public $maxFileSize = 0;
-
-    /**
-     * allow min file size
-     * Default: no limit
-     * @var int
-     */
-    public $minFileSize = 0;
-
-    /**
      * customize your see url, you can change it by EVENT_BEFORE_UPLOAD
      *
      * ```php
@@ -300,7 +274,6 @@ class FileUploadAction extends Action
             $event->fileKey = $this->getFileKey();
 
             $this->trigger(self::EVENT_BEFORE_UPLOAD, $event);
-            $this->validateFile($file);
             $this->saveImage($file);
             $this->trigger(self::EVENT_AFTER_UPLOAD, $event);
 
@@ -320,14 +293,11 @@ class FileUploadAction extends Action
                 // 如果设置为`true`，它会加入初始预览之中。
                 // 如果这个属性没有被设置或者没有传出，它会默认为`true`。
             ];
-        } catch (ValidateException $e) {
-            Yii::warning($e->getMessage(), __METHOD__);
-            return ['error' => $e->getMessage()];
-
         } catch (Exception $e) {
             Yii::warning($e->getMessage(), __METHOD__);
-            return ['error' => $e->getMessage()];
-//            return ['error' => Yii::t('upload', 'Upload file failed, please try again.')];
+            return YII_DEBUG
+                ? ['error' => $e->getMessage()]
+                : ['error' => Yii::t('upload', 'Upload file failed, please try again.')];
         }
     }
 
@@ -486,24 +456,6 @@ class FileUploadAction extends Action
 
         $newName = "{$this->getNewName($file)}.{$file->extension}";
         return $file->saveAs($path . $newName);
-    }
-
-    /**
-     * @param UploadedFile $file
-     * @throws ValidateException
-     */
-    public function validateFile(UploadedFile $file)
-    {
-        if (in_array($file->extension, $this->denyFileType) || !in_array($file->extension, $this->fileType)) {
-            throw new ValidateException(Yii::t('upload', 'File type is not allow'));
-        }
-
-        if (
-            (!empty($this->minFileSize) && $file->size < (int) $this->minFileSize) ||
-            (!empty($this->maxFileSize) && $file->size > (int) $this->maxFileSize)
-        ) {
-            throw new ValidateException(Yii::t('upload', 'File size is not allow'));
-        }
     }
 
 }
