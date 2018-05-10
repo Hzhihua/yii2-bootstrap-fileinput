@@ -238,6 +238,12 @@ class FileUploadAction extends Action
     ];
 
     /**
+     * response information
+     * @var array
+     */
+    private $_responseBody = [];
+
+    /**
      * init variable
      */
     public function init()
@@ -282,7 +288,7 @@ class FileUploadAction extends Action
              * 服务器方法必须返回一个包含`initialPreview`、`initialPreviewConfig`和`append`的JSON对象。
              * @see https://github.com/kartik-v/bootstrap-fileinput/wiki/12.-%E4%B8%80%E4%BA%9B%E6%A0%B7%E4%BE%8B%E4%BB%A3%E7%A0%81
              */
-            return [
+            return $this->getResponseBody() ?: [
                 'file_key' => $this->getFileKey(),
                 'initialPreview' => $this->getInitialPreview($file),
                 'initialPreviewConfig' => $this->getInitialPreviewConfig($file),
@@ -458,4 +464,19 @@ class FileUploadAction extends Action
         return $file->saveAs($path . $newName);
     }
 
+    /**
+     * @param array $data
+     */
+    public function setResponseBody(array $data)
+    {
+        $this->_responseBody = $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getResponseBody()
+    {
+        return $this->_responseBody;
+    }
 }
