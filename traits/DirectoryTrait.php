@@ -21,7 +21,7 @@ trait DirectoryTrait
      */
     public function handleUploadDirectory()
     {
-        $this->uploadDirectory = $this->handleDirectoryFormat($this->uploadDirectory, '/');
+        $this->uploadDirectory = $this->handleDirectoryFormat($this->uploadDirectory);
     }
 
     /**
